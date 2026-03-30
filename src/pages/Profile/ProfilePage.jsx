@@ -328,18 +328,6 @@ export default function ProfilePage() {
             {isAdmin ? "TIER 1 OPERATIONAL CONTROL" : "TIER 2 SHIFT MANAGEMENT"}
           </p>
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => setPwdOpen(true)}
-          >
-            CHANGE PASSWORD
-          </Button>
-          <Button variant="primary" size="md" onClick={() => setEditOpen(true)}>
-            EDIT PROFILE
-          </Button>
-        </div>
       </div>
 
       <div className={styles.grid}>
@@ -363,12 +351,12 @@ export default function ProfilePage() {
             <div className={styles.idRole}>{currentUser?.role}</div>
             <div className={styles.idMeta}>
               {[
-                [<IDIcon />, currentUser?.id, ],
-                [<EmailIcon />, currentUser?.email],
-                [<PhoneIcon />, currentUser?.phone],
-                [<LocationIcon />, currentUser?.location],
-              ].map(([icon, val], i) => (
-                <div key={i} className={styles.idMetaRow}>
+                { key:'id',       icon:<IDIcon/>,       val:currentUser?.id       },
+                { key:'email',    icon:<EmailIcon/>,    val:currentUser?.email    },
+                { key:'phone',    icon:<PhoneIcon/>,    val:currentUser?.phone    },
+                { key:'location', icon:<LocationIcon/>, val:currentUser?.location },
+              ].map(({ key, icon, val }) => (
+                <div key={key} className={styles.idMetaRow}>
                   <span className={styles.idMetaIcon}>{icon}</span>
                   <span className={styles.idMetaVal}>{val}</span>
                 </div>
