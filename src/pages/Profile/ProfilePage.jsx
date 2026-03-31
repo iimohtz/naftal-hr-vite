@@ -308,8 +308,8 @@ export default function ProfilePage() {
   const [pwdOpen, setPwdOpen] = useState(false);
 
   const stats = isAdmin
-    ? { present: 22, total: 22, overtime: "14.5h", efficiency: 98 }
-    : { present: 20, total: 22, overtime: "12.5h", efficiency: 91 };
+    ? { present: 22, total: 30, overtime: "14.5h", efficiency: 98 }
+    : { present: 20, total: 30, overtime: "12.5h", efficiency: 91 };
   const session = {
     lastLogin: "25 OCT 2023  08:00 AM",
     ip: currentUser?.ip || "192.168.1.104",

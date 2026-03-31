@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useApp } from '../../context/AppContext'
+import { useSearchParams } from 'react-router-dom'
 import { StatusBadge, Button, Modal, FormField, Input, Select, Textarea, Avatar } from '../../components/UI/UI'
 import styles from './DocumentsPage.module.css'
 
@@ -250,7 +251,8 @@ function QuickActionPanel() {
 
 /* ── Main Page ─────────────────────────────────────────────── */
 export default function DocumentsPage() {
-  const [activeTab, setActiveTab] = useState('passes')
+  const [searchParams] = useSearchParams()
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'payroll')
   return (
     <div className={styles.page}>
       <div className={styles.mainCol}>

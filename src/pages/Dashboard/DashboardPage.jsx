@@ -66,10 +66,10 @@ function MyEmployees() {
 function DocHubQuick() {
   const navigate = useNavigate()
   const docs = [
-    { icon: <DownloadIcon />, label: 'PAYROLL' },
-    { icon: <PrintIcon />,    label: 'PASSES'  },
-    { icon: <LogIcon />,      label: 'LOGS'    },
-    { icon: <ExportIcon />,   label: 'EXPORT'  },
+    { icon: <DownloadIcon />, label: 'PAYROLL', tab: 'payroll' },
+    { icon: <PrintIcon />,    label: 'PASSES',  tab: 'passes'},
+    { icon: <LogIcon />,      label: 'LOGS',  tab: 'logs'  },
+    { icon: <ExportIcon />,   label: 'EXPORT', tab: 'export' },
   ]
   return (
     <div className={styles.section}>
@@ -77,8 +77,8 @@ function DocHubQuick() {
         <span className={styles.sectionTitle}>DOCUMENT HUB</span>
       </div>
       <div className={styles.docGrid}>
-        {docs.map((d, i) => (
-          <button key={i} className={styles.docItem} onClick={() => navigate('/documents')}>
+        {docs.map((d) => (
+          <button key={d.tap} className={styles.docItem} onClick={() => navigate(`/documents?tab=${d.tab}`)}>
             <span className={styles.docIcon}>{d.icon}</span>
             <span className={styles.docLabel}>{d.label}</span>
           </button>
