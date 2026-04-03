@@ -9,14 +9,15 @@ import DocumentsPage from './pages/Documents/DocumentsPage'
 import ProfilePage   from './pages/Profile/ProfilePage'
 
 function ProtectedRoute({ children }) {
-  const { currentUser } = useApp()
-  return currentUser ? children : <Navigate to="/login" replace />
+  const token = localStorage.getItem('token')
+  return token ? children : <Navigate to="/login" replace />
 }
 
 function AdminRoute({ children }) {
-  const { currentUser } = useApp()
-  if (!currentUser)              return <Navigate to="/login"     replace />
-  if (currentUser.type !== 'admin') return <Navigate to="/dashboard" replace />
+  const token = localStorage.getItem('token')
+  const user  = JSON.parse(localStorage.getItem('user') || '{}')
+  if (!token)                  return <Navigate to="/login"     replace />
+  if (user.position !== 'admin') return <Navigate to="/dashboard" replace />
   return children
 }
 

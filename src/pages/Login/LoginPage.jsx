@@ -14,24 +14,25 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!id || !password) {
-      setError("Both fields are required.");
-      return;
+    e.preventDefault()
+    if (!id || !password) { setError('Both fields are required.'); return }
+    setLoading(true); setError('')
+    try {
+        const response = await fetch('http://management-and-monitoring-of-staff-movement-pfe.test/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ id: id, password })
+        })
+        const data = await response.json()
+        if (!response.ok) throw new Error(data.message)
+        localStorage.setItem('token', data.token)          // ← save token
+        localStorage.setItem('user', JSON.stringify(data.person)) // ← save user
+        navigate('/dashboard')
+    } catch (err) {
+        setError(err.message || 'Invalid Employee ID or password. Please verify your credentials.')
     }
-    setLoading(true);
-    setError("");
-    await new Promise((r) => setTimeout(r, 600));
-    const ok = login(id.trim().toUpperCase(), password);
-    if (ok) {
-      navigate("/dashboard");
-    } else {
-      setError(
-        "Invalid Employee ID or password. Please verify your credentials.",
-      );
-    }
-    setLoading(false);
-  };
+    setLoading(false)
+}
 
   const fillDemo = (type) => {
     if (type === "admin") {
