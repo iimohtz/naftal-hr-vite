@@ -162,14 +162,42 @@ function LogsTab() {
 /* ── Export Tab ────────────────────────────────────────────── */
 function ExportTab() {
   const { addToast } = useApp()
+
+  // Get user id from localStorage
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  const token = localStorage.getItem('token')
+
+  const handleAttendanceReport = async () => {
+    addToast('Generating Attendance Report…')
+    try {
+      const response = await fetch(`http://localhost:8000/api/resume/download?id=${user.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/pdf',
+        }
+      })
+      if (!response.ok) throw new Error('Failed to download')
+      const blob = await response.blob()
+      const url  = window.URL.createObjectURL(blob)
+      const a    = document.createElement('a')
+      a.href     = url
+      a.download = 'PresenceResume.pdf'
+      a.click()
+      window.URL.revokeObjectURL(url)
+    } catch (err) {
+      addToast('Failed to download report.', 'error')
+    }
+  }
+
   const exports = [
-    { icon:'📊', label:'Employee Directory',    fmt:'CSV',  desc:'Full personnel list with roles and current status'          },
-    { icon:'📋', label:'Attendance Report',      fmt:'PDF',  desc:'Monthly summary of all employee attendance records'        },
-    { icon:'🚪', label:'Gate Pass Log',          fmt:'XLSX', desc:'All gate passes with timestamps and destinations'          },
-    { icon:'📝', label:'Leave Requests History', fmt:'PDF',  desc:'Pending and historical leave requests with decisions'      },
-    { icon:'💰', label:'Payroll Summary',        fmt:'XLSX', desc:"This month's payroll overview with overtime breakdown"     },
-    { icon:'🔒', label:'Security Audit Log',     fmt:'PDF',  desc:'Session logs, access events, and protocol changes'        },
+    { icon:'📊', label:'Employee Directory',    fmt:'CSV',  desc:'Full personnel list with roles and current status',       onClick: () => addToast('Exporting Employee Directory as CSV…')   },
+    { icon:'📋', label:'Attendance Report',      fmt:'PDF',  desc:'Monthly summary of all employee attendance records',      onClick: handleAttendanceReport },
+    { icon:'🚪', label:'Gate Pass Log',          fmt:'XLSX', desc:'All gate passes with timestamps and destinations',        onClick: () => addToast('Exporting Gate Pass Log as XLSX…')       },
+    { icon:'📝', label:'Leave Requests History', fmt:'PDF',  desc:'Pending and historical leave requests with decisions',    onClick: () => addToast('Exporting Leave Requests as PDF…')       },
+    { icon:'💰', label:'Payroll Summary',        fmt:'XLSX', desc:"This month's payroll overview with overtime breakdown",   onClick: () => addToast('Exporting Payroll Summary as XLSX…')     },
+    { icon:'🔒', label:'Security Audit Log',     fmt:'PDF',  desc:'Session logs, access events, and protocol changes',      onClick: () => addToast('Exporting Security Audit Log as PDF…')   },
   ]
+
   return (
     <div className={styles.tabContent}>
       <div className={styles.tabToolbar}><div className={styles.tabLeft}><div className={styles.accentBar}/><span className={styles.tabCardTitle}>EXPORT CENTER</span></div></div>
@@ -180,7 +208,7 @@ function ExportTab() {
             <div className={styles.exportInfo}><span className={styles.exportLabel}>{ex.label}</span><span className={styles.exportDesc}>{ex.desc}</span></div>
             <div className={styles.exportRight}>
               <span className={styles.exportFmt}>{ex.fmt}</span>
-              <Button variant="primary" size="sm" onClick={()=>addToast(`Exporting ${ex.label} as ${ex.fmt}…`)}>EXPORT</Button>
+              <Button variant="primary" size="sm" onClick={ex.onClick}>EXPORT</Button>
             </div>
           </div>
         ))}

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://management-and-monitoring-of-staff-movement-pfe.test/api',
+    baseURL: 'http://localhost:8000/api',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -18,3 +18,4 @@ api.interceptors.request.use(config => {
 });
 
 export default api;
+

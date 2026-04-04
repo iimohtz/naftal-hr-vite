@@ -18,7 +18,7 @@ export default function LoginPage() {
     if (!id || !password) { setError('Both fields are required.'); return }
     setLoading(true); setError('')
     try {
-        const response = await fetch('http://management-and-monitoring-of-staff-movement-pfe.test/api/login', {
+        const response = await fetch('http://127.0.0.1:8000/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ id: id, password })
