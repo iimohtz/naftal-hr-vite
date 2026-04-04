@@ -170,7 +170,7 @@ function ExportTab() {
   const handleAttendanceReport = async () => {
     addToast('Generating Attendance Report…')
     try {
-      const response = await fetch(`http://localhost:8000/api/resume/download?id=${user.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/resume/download?id=${user.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/pdf',
