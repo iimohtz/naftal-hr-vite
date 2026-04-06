@@ -3,6 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import styles from "./LoginPage.module.css";
 
+
+const DEMO_USERS = {
+    "NFT-2024-00892": {
+      password: "admin123",
+      person: { id: "NFT-2024-00892", name: "Admin User", role: "admin" },
+    },
+    "NF-4829": {
+      password: "shift123",
+      person: { id: "NF-4829", name: "Shift Manager", role: "manager" },
+    },
+  };
+
+
 export default function LoginPage() {
   const { login } = useApp();
   const navigate = useNavigate();
@@ -13,26 +26,40 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+
+  
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!id || !password) { setError('Both fields are required.'); return }
-    setLoading(true); setError('')
-    try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ id: id, password })
-        })
-        const data = await response.json()
-        if (!response.ok) throw new Error(data.message)
-        localStorage.setItem('token', data.token)          // ← save token
-        localStorage.setItem('user', JSON.stringify(data.person)) // ← save user
-        navigate('/dashboard')
-    } catch (err) {
-        setError(err.message || 'Invalid Employee ID or password. Please verify your credentials.')
-    }
-    setLoading(false)
+  e.preventDefault();
+  if (!id || !password) { setError("Both fields are required."); return; }
+  setLoading(true); setError("");
+
+  
+  const success = login(id, password)
+if (success) {
+  localStorage.setItem('token', 'demo-token')
+  navigate('/dashboard')
+  setLoading(false); return
 }
+
+  
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ id, password }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message);
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.person));
+    login(data.person); 
+    navigate("/dashboard");
+  } catch (err) {
+    setError(err.message || "Invalid Employee ID or password. Please verify your credentials.");
+  }
+  setLoading(false);
+};
+
 
   const fillDemo = (type) => {
     if (type === "admin") {

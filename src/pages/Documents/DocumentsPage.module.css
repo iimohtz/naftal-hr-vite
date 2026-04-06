@@ -78,3 +78,21 @@
   .page { grid-template-columns: 1fr; }
   .quickPanel { position: static; }
 }
+/* styles.module.css */
+
+.radioRow {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}

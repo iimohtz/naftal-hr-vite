@@ -69,7 +69,13 @@ export const USERS = [
 const AppContext = createContext(null)
 
 export function AppProvider({ children }) {
-  const [currentUser,    setCurrentUser]    = useState(null)
+  const [currentUser, setCurrentUser] = useState(() => {
+  try {
+    const u = JSON.parse(localStorage.getItem('user'))
+    if (!u) return null
+    return { ...u, id: String(u.id ?? '') }  
+  } catch { return null }
+})
   const [employees,      setEmployees]      = useState(SEED_EMPLOYEES)
   const [gatePasses,     setGatePasses]     = useState(SEED_GATE_PASSES)
   const [requests,       setRequests]       = useState(SEED_REQUESTS)
@@ -77,13 +83,34 @@ export function AppProvider({ children }) {
   const [toasts,         setToasts]         = useState([])
 
   /* ── Auth ── */
-  const login = useCallback((id, password) => {
-    const user = USERS.find(u => u.id === id.toUpperCase() && u.password === password)
-    if (user) { setCurrentUser(user); return true }
-    return false
-  }, [])
+  const login = useCallback((idOrUser, password) => {
+  // Real API path — normalize the person object
+  if (typeof idOrUser === 'object') {
+    const normalized = {
+      ...idOrUser,
+      id:   String(idOrUser.id   ?? idOrUser.employee_id ?? ''),   // ensure string
+      name: idOrUser.name        ?? idOrUser.full_name   ?? 'User',
+      type: idOrUser.type        ?? idOrUser.position    ?? 'user',
+    }
+    setCurrentUser(normalized)
+    localStorage.setItem('user', JSON.stringify(normalized))
+    return true
+  }
+  // Demo path
+  const user = USERS.find(u => u.id === idOrUser.toUpperCase() && u.password === password)
+  if (user) {
+    setCurrentUser(user)
+    localStorage.setItem('user', JSON.stringify(user))
+    return true
+  }
+  return false
+}, [])
 
-  const logout = useCallback(() => setCurrentUser(null), [])
+  const logout = useCallback(() => {
+  setCurrentUser(null)
+  localStorage.removeItem('user')
+  localStorage.removeItem('token')
+}, [])
 
   /* ── Toast ── */
   const addToast = useCallback((message, type = 'success') => {

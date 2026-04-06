@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AppProvider, useApp } from './context/AppContext'
-import AppLayout     from './components/AppLayout/AppLayout'
+import AppLayout      from './components/AppLayout/AppLayout'
 import ToastContainer from './components/Toast/Toast'
-import LoginPage     from './pages/Login/LoginPage'
-import DashboardPage from './pages/Dashboard/DashboardPage'
-import EmployeesPage from './pages/Employees/EmployeesPage'
-import DocumentsPage from './pages/Documents/DocumentsPage'
-import ProfilePage   from './pages/Profile/ProfilePage'
+import LoginPage      from './pages/Login/LoginPage'
+import DashboardPage  from './pages/Dashboard/DashboardPage'
+import EmployeesPage  from './pages/Employees/EmployeesPage'
+import DocumentsPage  from './pages/Documents/DocumentsPage'
+import ProfilePage    from './pages/Profile/ProfilePage'
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('token')
@@ -16,8 +16,8 @@ function ProtectedRoute({ children }) {
 function AdminRoute({ children }) {
   const token = localStorage.getItem('token')
   const user  = JSON.parse(localStorage.getItem('user') || '{}')
-  if (!token)                  return <Navigate to="/login"     replace />
-  if (user.position !== 'admin') return <Navigate to="/dashboard" replace />
+  if (!token) return <Navigate to="/login" replace />
+  if (user.role !== 'admin' && user.type !== 'admin') return <Navigate to="/dashboard" replace />
   return children
 }
 

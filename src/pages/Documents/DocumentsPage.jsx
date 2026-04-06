@@ -220,22 +220,63 @@ function ExportTab() {
 /* ── Quick Action Panel ────────────────────────────────────── */
 function QuickActionPanel() {
   const { currentUser, addRequest, addGatePass, addToast } = useApp()
-  const [type,     setType]     = useState('')
-  const [dateFrom, setDateFrom] = useState('')
-  const [dateTo,   setDateTo]   = useState('')
-  const [note,     setNote]     = useState('')
+  const [type,        setType]        = useState('')
+  const [dateFrom,    setDateFrom]    = useState('')
+  const [dateTo,      setDateTo]      = useState('')
+  const [timeFrom,    setTimeFrom]    = useState('')
+  const [timeTo,      setTimeTo]      = useState('')
+  const [destination, setDestination] = useState('')
+  const [reasonType,  setReasonType]  = useState('personal') // 'personal' | 'work'
+  const [note,        setNote]        = useState('')
 
   const handleSend = () => {
-    if (!type) { addToast('Please select a request type.','error'); return }
+    if (!type) { addToast('Please select a request type.', 'error'); return }
+
     if (type === 'Gate Pass') {
-      const id = `GP-${Math.floor(Math.random()*90000+10000)}`
-      addGatePass({ id, employee:currentUser?.name||'Unknown', destination:note||'TBD', date:dateFrom||'Today', window:dateFrom&&dateTo?`${dateFrom} – ${dateTo}`:'TBD', status:'PENDING', time:new Date().toTimeString().slice(0,5), reason:note })
+      const id      = `GP-${Math.floor(Math.random() * 90000 + 10000)}`
+      const timeWindow = timeFrom && timeTo ? `${timeFrom} – ${timeTo}` : 'TBD'
+      const dateWindow = dateFrom && dateTo ? `${dateFrom} – ${dateTo}` : 'TBD'
+
+      addGatePass({
+        id,
+        employee:    currentUser?.name || 'Unknown',
+        destination: destination || 'TBD',
+        date:        dateFrom || 'Today',
+        window:      `${dateWindow} · ${timeWindow}`,
+        status:      'PENDING',
+        time:        new Date().toTimeString().slice(0, 5),
+        reason:      note,
+        reasonType,          // 'personal' | 'work'
+        timeFrom,
+        timeTo,
+      })
     } else {
-      const id   = `LR-${String(Math.floor(Math.random()*9000+1000))}`
-      const days = dateFrom&&dateTo ? Math.max(1,Math.ceil((new Date(dateTo)-new Date(dateFrom))/86400000)) : 1
-      addRequest({ id, employee:currentUser?.name||'Unknown', type:type.replace(' Leave',''), days, status:'PENDING', date:new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}), from:dateFrom, to:dateTo, note })
+      const id   = `LR-${String(Math.floor(Math.random() * 9000 + 1000))}`
+      const days = dateFrom && dateTo
+        ? Math.max(1, Math.ceil((new Date(dateTo) - new Date(dateFrom)) / 86400000))
+        : 1
+
+      addRequest({
+        id,
+        employee:   currentUser?.name || 'Unknown',
+        type:       type.replace(' Leave', ''),
+        days,
+        status:     'PENDING',
+        date:       new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+        from:       dateFrom,
+        to:         dateTo,
+        timeFrom,
+        timeTo,
+        destination,
+        reasonType,
+        note,
+      })
     }
-    setType(''); setDateFrom(''); setDateTo(''); setNote('')
+
+    // reset
+    setType(''); setDateFrom(''); setDateTo('')
+    setTimeFrom(''); setTimeTo(''); setDestination('')
+    setReasonType('personal'); setNote('')
   }
 
   return (
@@ -244,34 +285,93 @@ function QuickActionPanel() {
         <span className={styles.quickTitle}>QUICK ACTION</span>
         <span className={styles.quickSub}>INTERNAL SUBMISSION TERMINAL</span>
       </div>
+
       <div className={styles.quickBody}>
+        {/* Request Type */}
         <FormField label="Request Type">
-          <Select value={type} onChange={e=>setType(e.target.value)}>
+          <Select value={type} onChange={e => setType(e.target.value)}>
             <option value="">SELECT REQUEST TYPE…</option>
             <option>Annual Leave</option>
             <option>Medical Leave</option>
             <option>Gate Pass</option>
-            <option>Overtime Approval</option>
             <option>Document Request</option>
             <option>Equipment Request</option>
           </Select>
         </FormField>
+
+        {/* Duration / Period */}
         <FormField label="Duration / Period">
           <div className={styles.dateRow}>
-            <Input type="date" value={dateFrom} onChange={e=>setDateFrom(e.target.value)}/>
-            <Input type="date" value={dateTo}   onChange={e=>setDateTo(e.target.value)}/>
+            <Input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
+            <Input type="date" value={dateTo}   onChange={e => setDateTo(e.target.value)}   />
           </div>
         </FormField>
+
+        {/* Time Range */}
+        <FormField label="Time (optional)">
+          <div className={styles.dateRow}>
+            <Input type="time" value={timeFrom} onChange={e => setTimeFrom(e.target.value)} />
+            <Input type="time" value={timeTo}   onChange={e => setTimeTo(e.target.value)}   />
+          </div>
+        </FormField>
+
+        {/* Destination */}
+        <FormField label="Destination (optional)">
+          <Input
+            type="text"
+            value={destination}
+            onChange={e => setDestination(e.target.value)}
+            placeholder="e.g. Head Office, Site B…"
+          />
+        </FormField>
+
+        {/* Reason Type */}
+        <FormField label="Reason Category">
+          <div className={styles.radioRow}>
+            <label className={styles.radioLabel}>
+              <input
+                type="radio"
+                name="reasonType"
+                value="personal"
+                checked={reasonType === 'personal'}
+                onChange={() => setReasonType('personal')}
+              />
+              <span>Personal</span>
+            </label>
+            <label className={styles.radioLabel}>
+              <input
+                type="radio"
+                name="reasonType"
+                value="work"
+                checked={reasonType === 'work'}
+                onChange={() => setReasonType('work')}
+              />
+              <span>Work</span>
+            </label>
+          </div>
+        </FormField>
+
+        {/* Note */}
         <FormField label="Internal Note / Justification">
-          <Textarea value={note} onChange={e=>setNote(e.target.value)} placeholder="Enter justification…" rows={5}/>
+          <Textarea
+            value={note}
+            onChange={e => setNote(e.target.value)}
+            placeholder="Enter justification…"
+            rows={5}
+          />
         </FormField>
       </div>
+
       <div className={styles.quickFooter}>
         <Button variant="primary" size="lg" fullWidth onClick={handleSend}>
           SEND
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </Button>
-        <div className={styles.signedBy}>SIGNED: {currentUser?.name?.toUpperCase()} · ID: {currentUser?.id?.slice(-5)}</div>
+        <div className={styles.signedBy}>
+          SIGNED: {currentUser?.name?.toUpperCase()} · ID: {currentUser?.id?.slice(-5)}
+        </div>
       </div>
     </div>
   )
