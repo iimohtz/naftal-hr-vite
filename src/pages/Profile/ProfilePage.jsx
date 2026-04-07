@@ -353,7 +353,7 @@ export default function ProfilePage() {
               {[
                 { key:'id',       icon:<IDIcon/>,       val:currentUser?.id       },
                 { key:'email',    icon:<EmailIcon/>,    val:currentUser?.email    },
-                { key:'phone',    icon:<PhoneIcon/>,    val:currentUser?.phone    },
+                { key:'phone',    icon:<PhoneIcon/>,    val:currentUser?.phone_ip },
                 { key:'location', icon:<LocationIcon/>, val:currentUser?.location },
               ].map(({ key, icon, val }) => (
                 <div key={key} className={styles.idMetaRow}>
