@@ -89,3 +89,31 @@
   .formGrid { grid-template-columns: 1fr; }
   .attendanceCols { grid-template-columns: 1fr 1fr; }
 }
+/* Paste these at the END of your existing EmployeesPage.module.css */
+
+.empAvatarBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  border-radius: var(--radius);
+  transition: opacity var(--t-fast);
+  flex-shrink: 0;
+}
+.empAvatarBtn:hover { opacity: 0.75; }
+
+.empNameBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+  text-align: left;
+  font-family: var(--font-body);
+  transition: color var(--t-fast);
+  white-space: nowrap;
+}
+.empNameBtn:hover { color: var(--orange); }

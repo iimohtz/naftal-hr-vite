@@ -1,5 +1,62 @@
 import { createContext, useContext, useState, useCallback } from 'react'
 
+/* ─────────────────────────────────────────────────────────────
+   ADMIN ACCESS LIST
+   Add the numeric DB id of every person who should have admin
+   access (i.e. directors / DRH). Matches person.id from the API.
+   ───────────────────────────────────────────────────────────── */
+export const ADMIN_IDS = [1]
+
+/* ─────────────────────────────────────────────────────────────
+   Helper – build a consistent user object from whatever the API
+   or the demo path gives us.
+   API shape:  data.person  → { id, first_name, last_name,
+                                 position, email, phone_ip, unit_id }
+               data.unit    → { id, unit_name, unit_type, director_id }
+   ───────────────────────────────────────────────────────────── */
+export function normalizeUser(person, unit) {
+  if (!person) return null
+
+  const numericId  = Number(person.id)
+  const firstName  = person.first_name  || person.firstName  || ''
+  const lastName   = person.last_name   || person.lastName   || ''
+  const fullName   = (firstName && lastName)
+    ? `${firstName} ${lastName}`
+    : person.name || 'Unknown'
+
+  // A person is admin if their numeric id is in ADMIN_IDS
+  // OR if they are the director of their own unit (director_id === person.id)
+  const isDirector = unit ? Number(unit.director_id) === numericId : false
+  const isAdmin    = ADMIN_IDS.includes(numericId) || isDirector
+
+  return {
+    // Keep all raw API fields intact for reference
+    ...person,
+
+    // Canonical fields used across the whole UI
+    id:          String(person.id ?? ''),
+    name:        fullName,                                    // full name for Avatar initials
+    firstName,
+    lastName,
+    displayName: fullName,                                    // shown in Topbar
+    email:       person.email       || '',
+    phone:       person.phone_ip    || person.phone || '',    // DB field is phone_ip
+    position:    person.position    || '',                    // e.g. "Directeur Informatique"
+    unit_name:   unit?.unit_name    || '',                    // e.g. "Direction Informatique"
+    unit_id:     person.unit_id     || null,
+    director_id: unit?.director_id  || null,
+
+    // Auth / role
+    type:        isAdmin ? 'admin' : 'user',
+    badge:       isAdmin ? 'HR TERMINAL MANAGER' : (person.position || 'EMPLOYEE'),
+    role:        person.position    || '',
+
+    // Session (populated server-side if available, otherwise defaults)
+    ip:          person.ip          || '—',
+    sessionId:   person.sessionId   || '—',
+  }
+}
+
 /* ─── Seed Data ────────────────────────────────────────────── */
 const SEED_EMPLOYEES = [
   { id:'NF-4829', name:'Amine Benali',    dept:'REFINERY OPS',  role:'SITE MANAGER',      status:'ACTIVE',   email:'amine.benali@naftal.dz',    phone:'+213 550 001 001', location:'Zone B – Refinery',    overtime:12.5, present:22, total:22, efficiency:98,  joinDate:'2019-03-12', shift:'Morning'  },
@@ -46,71 +103,82 @@ const SEED_NOTIFICATIONS = [
   { id:5, text:'Gate pass GP-883100 awaiting approval',         time:'25 Oct 11:45',        category:'SECURITY', read:false },
 ]
 
-export const USERS = [
-  {
-    id: 'NFT-2024-00892', password: 'admin123',
-    name: 'Kader Benali', displayName: 'Administrator Profile',
-    role: 'SENIOR OPERATIONS ADMIN', type: 'admin',
-    badge: 'HR TERMINAL MANAGER',
-    email: 'KADER.BENALI@NAFTAL.DZ', phone: '+213 550 123 456',
-    location: 'HQ, ALGIERS', sessionId: '#NFT-8871-XX', ip: '192.168.1.104',
-  },
-  {
-    id: 'NF-4829', password: 'shift123',
-    name: 'Amine K.', displayName: 'Amine K.',
-    role: 'SHIFT MANAGER', type: 'manager',
-    badge: 'SHIFT MANAGER',
-    email: 'AMINE.K@NAFTAL.DZ', phone: '+213 550 001 001',
-    location: 'Zone B – Refinery', sessionId: '#NFT-9921-AB', ip: '192.168.1.105',
-  },
-]
-
 /* ─── Context ────────────────────────────────────────────── */
 const AppContext = createContext(null)
 
 export function AppProvider({ children }) {
+  // Rehydrate from localStorage on first load
   const [currentUser, setCurrentUser] = useState(() => {
-  try {
-    const u = JSON.parse(localStorage.getItem('user'))
-    if (!u) return null
-    return { ...u, id: String(u.id ?? '') }  
-  } catch { return null }
-})
-  const [employees,      setEmployees]      = useState(SEED_EMPLOYEES)
-  const [gatePasses,     setGatePasses]     = useState(SEED_GATE_PASSES)
-  const [requests,       setRequests]       = useState(SEED_REQUESTS)
-  const [notifications,  setNotifications]  = useState(SEED_NOTIFICATIONS)
-  const [toasts,         setToasts]         = useState([])
+    try {
+      const raw  = localStorage.getItem('user')
+      const unit = JSON.parse(localStorage.getItem('unit') || 'null')
+      if (!raw) return null
+      const person = JSON.parse(raw)
+      // If already normalized (has .name set), just return as-is
+      // Otherwise run through normalizeUser
+      if (person?.firstName !== undefined || person?.first_name) {
+        return normalizeUser(person, unit)
+      }
+      return person // demo user already normalized at login time
+    } catch { return null }
+  })
+
+  const [employees,     setEmployees]     = useState(SEED_EMPLOYEES)
+  const [gatePasses,    setGatePasses]    = useState(SEED_GATE_PASSES)
+  const [requests,      setRequests]      = useState(SEED_REQUESTS)
+  const [notifications, setNotifications] = useState(SEED_NOTIFICATIONS)
+  const [toasts,        setToasts]        = useState([])
 
   /* ── Auth ── */
-  const login = useCallback((idOrUser, password) => {
-  // Real API path — normalize the person object
-  if (typeof idOrUser === 'object') {
-    const normalized = {
-      ...idOrUser,
-      id:   String(idOrUser.id   ?? idOrUser.employee_id ?? ''),   // ensure string
-      name: idOrUser.name        ?? idOrUser.full_name   ?? 'User',
-      type: idOrUser.type        ?? idOrUser.position    ?? 'user',
+  const login = useCallback((personOrId, password) => {
+    // ── Real API path: called with the person object from data.person
+    if (typeof personOrId === 'object' && personOrId !== null) {
+      const unit = JSON.parse(localStorage.getItem('unit') || 'null')
+      const normalized = normalizeUser(personOrId, unit)
+      setCurrentUser(normalized)
+      localStorage.setItem('user', JSON.stringify(personOrId)) // raw for re-hydration
+      return true
     }
-    setCurrentUser(normalized)
-    localStorage.setItem('user', JSON.stringify(normalized))
-    return true
-  }
-  // Demo path
-  const user = USERS.find(u => u.id === idOrUser.toUpperCase() && u.password === password)
-  if (user) {
-    setCurrentUser(user)
-    localStorage.setItem('user', JSON.stringify(user))
-    return true
-  }
-  return false
-}, [])
+
+    // ── Demo path: called with (id string, password string)
+    const DEMO_USERS = {
+      'NFT-2024-00892': {
+        password: 'admin123',
+        person: {
+          id: 'NFT-2024-00892', first_name: 'Admin', last_name: 'User',
+          position: 'HR Terminal Manager', email: 'admin@naftal.dz',
+          phone_ip: '+213 550 123 456', unit_id: null,
+        },
+        unit: { unit_name: 'Direction RH', unit_type: 'direction', director_id: 'NFT-2024-00892' },
+      },
+      'NF-4829': {
+        password: 'shift123',
+        person: {
+          id: 'NF-4829', first_name: 'Amine', last_name: 'K.',
+          position: 'Shift Manager', email: 'amine.k@naftal.dz',
+          phone_ip: '+213 550 001 001', unit_id: 2,
+        },
+        unit: { unit_name: 'Zone B – Refinery', unit_type: 'service', director_id: null },
+      },
+    }
+
+    const demo = DEMO_USERS[personOrId?.toUpperCase?.()]
+    if (demo && demo.password === password) {
+      const normalized = normalizeUser(demo.person, demo.unit)
+      setCurrentUser(normalized)
+      localStorage.setItem('user', JSON.stringify(demo.person))
+      localStorage.setItem('unit', JSON.stringify(demo.unit))
+      return true
+    }
+    return false
+  }, [])
 
   const logout = useCallback(() => {
-  setCurrentUser(null)
-  localStorage.removeItem('user')
-  localStorage.removeItem('token')
-}, [])
+    setCurrentUser(null)
+    localStorage.removeItem('user')
+    localStorage.removeItem('unit')
+    localStorage.removeItem('token')
+  }, [])
 
   /* ── Toast ── */
   const addToast = useCallback((message, type = 'success') => {
@@ -120,51 +188,21 @@ export function AppProvider({ children }) {
   }, [])
 
   /* ── Employees ── */
-  const addEmployee = useCallback((emp) => {
-    setEmployees(prev => [emp, ...prev])
-    addToast(`Employee ${emp.name} added successfully.`)
-  }, [addToast])
-
-  const updateEmployee = useCallback((id, data) => {
-    setEmployees(prev => prev.map(e => e.id === id ? { ...e, ...data } : e))
-    addToast('Employee record updated.')
-  }, [addToast])
-
-  const deleteEmployee = useCallback((id) => {
-    setEmployees(prev => prev.filter(e => e.id !== id))
-    addToast('Employee removed from directory.', 'warning')
-  }, [addToast])
+  const addEmployee    = useCallback((emp)        => { setEmployees(prev => [emp, ...prev]);                                  addToast(`Employee ${emp.name} added successfully.`)        }, [addToast])
+  const updateEmployee = useCallback((id, data)   => { setEmployees(prev => prev.map(e => e.id === id ? { ...e, ...data } : e)); addToast('Employee record updated.')                     }, [addToast])
+  const deleteEmployee = useCallback((id)         => { setEmployees(prev => prev.filter(e => e.id !== id));                   addToast('Employee removed from directory.', 'warning')    }, [addToast])
 
   /* ── Gate Passes ── */
-  const addGatePass = useCallback((gp) => {
-    setGatePasses(prev => [gp, ...prev])
-    addToast(`Gate pass ${gp.id} submitted.`)
-  }, [addToast])
-
-  const updateGatePassStatus = useCallback((id, status) => {
-    setGatePasses(prev => prev.map(g => g.id === id ? { ...g, status } : g))
-    addToast(`Gate pass ${id} ${status.toLowerCase()}.`, status === 'APPROVED' ? 'success' : 'warning')
-  }, [addToast])
+  const addGatePass          = useCallback((gp)          => { setGatePasses(prev => [gp, ...prev]);                                            addToast(`Gate pass ${gp.id} submitted.`)                                                          }, [addToast])
+  const updateGatePassStatus = useCallback((id, status)  => { setGatePasses(prev => prev.map(g => g.id === id ? { ...g, status } : g));        addToast(`Gate pass ${id} ${status.toLowerCase()}.`, status === 'APPROVED' ? 'success' : 'warning') }, [addToast])
 
   /* ── Requests ── */
-  const addRequest = useCallback((req) => {
-    setRequests(prev => [req, ...prev])
-    addToast(`Request ${req.id} submitted for review.`)
-  }, [addToast])
-
-  const updateRequestStatus = useCallback((id, status) => {
-    setRequests(prev => prev.map(r => r.id === id ? { ...r, status } : r))
-    addToast(`Request ${id} marked as ${status.toLowerCase()}.`, status === 'APPROVED' ? 'success' : 'warning')
-  }, [addToast])
+  const addRequest          = useCallback((req)         => { setRequests(prev => [req, ...prev]);                                             addToast(`Request ${req.id} submitted for review.`)                                                   }, [addToast])
+  const updateRequestStatus = useCallback((id, status)  => { setRequests(prev => prev.map(r => r.id === id ? { ...r, status } : r));          addToast(`Request ${id} marked as ${status.toLowerCase()}.`, status === 'APPROVED' ? 'success' : 'warning') }, [addToast])
 
   /* ── Notifications ── */
-  const markNotificationRead = useCallback((id) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n))
-  }, [])
-
-  const markAllNotificationsRead = useCallback(() => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })))
-  }, [])
+  const markNotificationRead    = useCallback((id) => { setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n)) }, [])
+  const markAllNotificationsRead = useCallback(()  => { setNotifications(prev => prev.map(n => ({ ...n, read: true })))                  }, [])
 
   const value = {
     currentUser, login, logout,

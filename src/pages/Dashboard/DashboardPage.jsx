@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
 import { StatusBadge, Avatar } from '../../components/UI/UI'
+import EmployeeProfileDrawer from '../../components/EmployeeProfileDrawer/EmployeeProfileDrawer'
 import styles from './DashboardPage.module.css'
 
 /* ── Icons ─────────────────────────────────────────────────── */
@@ -36,7 +38,7 @@ function KpiStrip() {
 }
 
 /* ── My Employees ──────────────────────────────────────────── */
-function MyEmployees() {
+function MyEmployees({ onViewEmployee }) {
   const { employees } = useApp()
   const navigate = useNavigate()
   return (
@@ -47,13 +49,18 @@ function MyEmployees() {
       </div>
       {employees.slice(0, 5).map(emp => (
         <div key={emp.id} className={styles.empRow}>
-          <Avatar name={emp.name} size={36} />
+          {/* Clicking the avatar or name opens the profile drawer */}
+          <button className={styles.empClickable} onClick={() => onViewEmployee(emp)} title="View profile">
+            <Avatar name={emp.name} size={36} />
+          </button>
           <div className={styles.empInfo}>
-            <span className={styles.empName}>{emp.name}</span>
+            <button className={styles.empNameBtn} onClick={() => onViewEmployee(emp)}>
+              {emp.name}
+            </button>
             <span className={styles.empId}>ID: {emp.id}</span>
           </div>
           <StatusBadge status={emp.status} />
-          <button className={styles.viewBtn} onClick={() => navigate('/employees')} title="View employee">
+          <button className={styles.viewBtn} onClick={() => onViewEmployee(emp)} title="View employee profile">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="8" rx="7" ry="4.5" stroke="currentColor" strokeWidth="1.4"/><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.4"/></svg>
           </button>
         </div>
@@ -67,9 +74,9 @@ function DocHubQuick() {
   const navigate = useNavigate()
   const docs = [
     { icon: <DownloadIcon />, label: 'PAYROLL', tab: 'payroll' },
-    { icon: <PrintIcon />,    label: 'PASSES',  tab: 'passes'},
-    { icon: <LogIcon />,      label: 'LOGS',  tab: 'logs'  },
-    { icon: <ExportIcon />,   label: 'EXPORT', tab: 'export' },
+    { icon: <PrintIcon />,    label: 'PASSES',  tab: 'passes'  },
+    { icon: <LogIcon />,      label: 'LOGS',    tab: 'logs'    },
+    { icon: <ExportIcon />,   label: 'EXPORT',  tab: 'export'  },
   ]
   return (
     <div className={styles.section}>
@@ -78,7 +85,7 @@ function DocHubQuick() {
       </div>
       <div className={styles.docGrid}>
         {docs.map((d) => (
-          <button key={d.tap} className={styles.docItem} onClick={() => navigate(`/documents?tab=${d.tab}`)}>
+          <button key={d.tab} className={styles.docItem} onClick={() => navigate(`/documents?tab=${d.tab}`)}>
             <span className={styles.docIcon}>{d.icon}</span>
             <span className={styles.docLabel}>{d.label}</span>
           </button>
@@ -187,13 +194,14 @@ function GatePassesManager() {
 export default function DashboardPage() {
   const { currentUser } = useApp()
   const isAdmin = currentUser?.type === 'admin'
+  const [profileEmp, setProfileEmp] = useState(null)
 
   return (
     <div className={styles.page}>
       <KpiStrip />
       <div className={styles.grid}>
         <div className={styles.col}>
-          {isAdmin && <MyEmployees />}
+          {isAdmin && <MyEmployees onViewEmployee={setProfileEmp} />}
           <DocHubQuick />
         </div>
         <div className={styles.col}>
@@ -202,6 +210,15 @@ export default function DashboardPage() {
           {!isAdmin && <GatePassesManager />}
         </div>
       </div>
+
+      {/* Floating profile drawer */}
+      {profileEmp && (
+        <EmployeeProfileDrawer
+          employee={profileEmp}
+          onClose={() => setProfileEmp(null)}
+          readOnly
+        />
+      )}
     </div>
   )
 }

@@ -8,16 +8,36 @@ import EmployeesPage  from './pages/Employees/EmployeesPage'
 import DocumentsPage  from './pages/Documents/DocumentsPage'
 import ProfilePage    from './pages/Profile/ProfilePage'
 
+/* ─────────────────────────────────────────────────────────────
+   ProtectedRoute – redirect to /login if no token present
+───────────────────────────────────────────────────────────── */
 function ProtectedRoute({ children }) {
+  const { currentUser } = useApp()
   const token = localStorage.getItem('token')
-  return token ? children : <Navigate to="/login" replace />
+
+  // Allow access if we have a token OR an active session in context
+  // (covers demo login which sets context but uses 'demo-token')
+  if (!token && !currentUser) return <Navigate to="/login" replace />
+  return children
 }
 
+/* ─────────────────────────────────────────────────────────────
+   AdminRoute – reads from AppContext (normalized user) so that
+   currentUser.type === 'admin' is always accurate regardless of
+   how the raw localStorage object is shaped.
+   Previously it read user.role from localStorage directly, which
+   broke because the raw API person object has no role/type field.
+───────────────────────────────────────────────────────────── */
 function AdminRoute({ children }) {
+  const { currentUser } = useApp()
   const token = localStorage.getItem('token')
-  const user  = JSON.parse(localStorage.getItem('user') || '{}')
-  if (!token) return <Navigate to="/login" replace />
-  if (user.role !== 'admin' && user.type !== 'admin') return <Navigate to="/dashboard" replace />
+
+  if (!token && !currentUser) return <Navigate to="/login" replace />
+
+  // currentUser.type is set to 'admin' by normalizeUser() in AppContext
+  // whenever ADMIN_IDS includes the user's numeric id OR they are a director
+  if (currentUser?.type !== 'admin') return <Navigate to="/dashboard" replace />
+
   return children
 }
 
@@ -33,7 +53,14 @@ function AppShell() {
           >
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="employees" element={<AdminRoute><EmployeesPage /></AdminRoute>} />
+            <Route
+              path="employees"
+              element={
+                <AdminRoute>
+                  <EmployeesPage />
+                </AdminRoute>
+              }
+            />
             <Route path="documents" element={<DocumentsPage />} />
             <Route path="profile"   element={<ProfilePage />} />
           </Route>

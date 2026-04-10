@@ -9,9 +9,9 @@ const ProfileIcon   = () => <svg width="18" height="18" viewBox="0 0 18 18" fill
 const SignOutIcon   = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M10 11l3-3-3-3M13 8H6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
 const BrandIcon     = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-    <rect x="1" y="1" width="7" height="7" rx="1" fill="white" opacity="0.9"/>
-    <rect x="10" y="1" width="7" height="7" rx="1" fill="white" opacity="0.6"/>
-    <rect x="1" y="10" width="7" height="7" rx="1" fill="white" opacity="0.6"/>
+    <rect x="1"  y="1"  width="7" height="7" rx="1" fill="white" opacity="0.9"/>
+    <rect x="10" y="1"  width="7" height="7" rx="1" fill="white" opacity="0.6"/>
+    <rect x="1"  y="10" width="7" height="7" rx="1" fill="white" opacity="0.6"/>
     <rect x="10" y="10" width="7" height="7" rx="1" fill="white" opacity="0.3"/>
   </svg>
 )
@@ -19,13 +19,33 @@ const BrandIcon     = () => (
 export default function Sidebar() {
   const { currentUser, logout } = useApp()
   const navigate = useNavigate()
-  const isAdmin  = currentUser?.type === 'admin'
+
+  // currentUser.type is set to 'admin' by normalizeUser() in AppContext
+  // whenever the numeric id is in ADMIN_IDS or the user is a unit director
+  const isAdmin = currentUser?.type === 'admin'
+
+  // ── Display name: prefer the normalized full name ──────────────
+  // normalizeUser() sets .name = first_name + ' ' + last_name
+  const displayName = currentUser?.name || '—'
+
+  // ── Avatar initial: first letter of first_name, fallback to full name ──
+  const avatarInitial =
+    (currentUser?.firstName || currentUser?.name || '?')
+      .charAt(0)
+      .toUpperCase()
+
+  // ── Sub-label under name: position title ──────────────────────
+  const roleLabel =
+    currentUser?.position ||
+    currentUser?.badge    ||
+    currentUser?.role     ||
+    ''
 
   const navItems = [
-    { to: '/dashboard',  label: 'DASHBOARD',  icon: <DashboardIcon /> },
+    { to: '/dashboard', label: 'DASHBOARD', icon: <DashboardIcon /> },
     ...(isAdmin ? [{ to: '/employees', label: 'EMPLOYEES', icon: <EmployeesIcon /> }] : []),
-    { to: '/documents',  label: 'DOCUMENTS',  icon: <DocumentIcon /> },
-    { to: '/profile',    label: 'PROFILE',    icon: <ProfileIcon />  },
+    { to: '/documents', label: 'DOCUMENTS', icon: <DocumentIcon /> },
+    { to: '/profile',   label: 'PROFILE',   icon: <ProfileIcon />  },
   ]
 
   const handleLogout = () => { logout(); navigate('/login') }
@@ -44,7 +64,9 @@ export default function Sidebar() {
           <NavLink
             key={item.to}
             to={item.to}
-            className={({ isActive }) => `${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
+            className={({ isActive }) =>
+              `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
+            }
           >
             <span className={styles.navIcon}>{item.icon}</span>
             <span className={styles.navLabel}>{item.label}</span>
@@ -54,10 +76,13 @@ export default function Sidebar() {
 
       <div className={styles.sidebarFooter}>
         <div className={styles.userInfo}>
-          <div className={styles.userAvatar}>{currentUser?.name?.charAt(0)?.toUpperCase()}</div>
+          {/* Avatar: first letter of first name */}
+          <div className={styles.userAvatar}>{avatarInitial}</div>
           <div className={styles.userDetails}>
-            <span className={styles.userName}>{currentUser?.name}</span>
-            <span className={styles.userRole}>{currentUser?.badge}</span>
+            {/* Full name: firstname + lastname from DB */}
+            <span className={styles.userName}>{displayName}</span>
+            {/* Position title from DB */}
+            <span className={styles.userRole}>{roleLabel}</span>
           </div>
         </div>
         <button className={styles.signOutBtn} onClick={handleLogout}>

@@ -53,3 +53,34 @@
   .kpiStrip { grid-template-columns: repeat(2,1fr); }
   .kpiCard:nth-child(2) { border-right: none; }
 }
+/* Paste this at the END of your existing DashboardPage.module.css */
+
+/* ── Clickable employee row elements for drawer trigger ──── */
+.empClickable {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  border-radius: var(--radius);
+  transition: opacity var(--t-fast);
+  flex-shrink: 0;
+}
+.empClickable:hover { opacity: 0.8; }
+
+.empNameBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--t-fast);
+  font-family: var(--font-body);
+}
+.empNameBtn:hover { color: var(--orange); }

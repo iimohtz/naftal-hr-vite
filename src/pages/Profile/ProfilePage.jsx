@@ -232,7 +232,7 @@ export default function ProfilePage() {
 
   // Individual fields – DB fields take priority over AppContext fallbacks
   const userEmail    = storedUser?.email     || currentUser?.email    || "—";
-  const userPhone    = storedUser?.phone     || storedUser?.phone_number || currentUser?.phone_ip || "—";
+  const userPhone    = storedUser?.phone     || storedUser?.phone_number || currentUser?.phone || "—";
   const userLocation = storedUser?.location  || currentUser?.location || "—";
   const userPosition = storedUser?.unit_name || storedUser?.position  || storedUser?.department || "—";
   const userId       = storedUser?.id        || currentUser?.id       || "—";
