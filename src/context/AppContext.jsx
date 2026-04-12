@@ -28,9 +28,9 @@ export function normalizeUser(person, unit) {
   // A person is admin if their numeric id is in ADMIN_IDS
   // OR if they are the director of their own unit (director_id === person.id)
   const isDirector = unit ? Number(unit.director_id) === numericId : false;
-  const adminUnitTypes = ['direction', 'department', 'service']
-  const isAdminUnit    = unit ? adminUnitTypes.includes(unit.unit_type) : false
-  const isAdmin        = ADMIN_IDS.includes(numericId) || isDirector || isAdminUnit
+  const adminUnitTypes = ["direction", "department", "service"];
+  const isAdminUnit = unit ? adminUnitTypes.includes(unit.unit_type) : false;
+  const isAdmin = ADMIN_IDS.includes(numericId) || isDirector || isAdminUnit;
 
   return {
     // Keep all raw API fields intact for reference
@@ -487,6 +487,25 @@ const SEED_NOTIFICATIONS = [
 /* ─── Context ────────────────────────────────────────────── */
 const AppContext = createContext(null);
 
+function mapList(list) {
+  return list.map((p) => ({
+    id: String(p.id),
+    name: `${p.first_name ?? ""} ${p.last_name ?? ""}`.trim(),
+    dept:       p.department || p.unit_name || p.position || 'N/A',
+    role: p.position || "N/A",
+    email: p.email || "",
+    phone: p.phone_ip || "",
+    status: p.is_active ? "ACTIVE" : "INACTIVE",
+    joinDate: p.contract_start_date?.slice(0, 10) || "",
+    location: p.unit?.unit_name || "—",
+    shift: "—",
+    overtime: 0,
+    present: 0,
+    total: 22,
+    efficiency: 0,
+  }));
+}
+
 export function AppProvider({ children }) {
   // Rehydrate from localStorage on first load
   const [currentUser, setCurrentUser] = useState(() => {
@@ -507,29 +526,14 @@ export function AppProvider({ children }) {
   });
 
   const [employees, setEmployees] = useState(() => {
-  try {
-    const list = JSON.parse(localStorage.getItem('list') || 'null')
-      if (list && list.length > 0) {
-        return list.map(p => ({
-          id:       String(p.id),
-          name:     `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim(),
-          dept:     p.position || 'N/A',
-          role:     p.position      || 'N/A',
-          email:    p.email         || '',
-          phone:    p.phone_ip      || '',
-          status:   p.is_active     ? 'ACTIVE' : 'INACTIVE',
-          joinDate: p.contract_start_date?.slice(0, 10) || '',
-          location: p.unit_name     || '—',
-          shift:    '—',
-          overtime: 0,
-          present:  0,
-          total:    22,
-          efficiency: 0,
-        }))
-      }
-      return SEED_EMPLOYEES
-    } catch { return SEED_EMPLOYEES }
-   })
+    try {
+      const list = JSON.parse(localStorage.getItem("list") || "null");
+      if (list && list.length > 0) return mapList(list);
+      return SEED_EMPLOYEES;
+    } catch {
+      return SEED_EMPLOYEES;
+    }
+  });
   const [gatePasses, setGatePasses] = useState(SEED_GATE_PASSES);
   const [requests, setRequests] = useState(SEED_REQUESTS);
   const [notifications, setNotifications] = useState(SEED_NOTIFICATIONS);
@@ -537,14 +541,22 @@ export function AppProvider({ children }) {
 
   /* ── Auth ── */
   const login = useCallback((personOrId, password) => {
-    // ── Real API path: called with the person object from data.person
-    if (typeof personOrId === "object" && personOrId !== null) {
-      const unit = JSON.parse(localStorage.getItem("unit") || "null");
-      const normalized = normalizeUser(personOrId, unit);
-      setCurrentUser(normalized);
-      localStorage.setItem("user", JSON.stringify(personOrId)); // raw for re-hydration
-      return true;
-    }
+  // Real API path
+  if (typeof personOrId === 'object' && personOrId !== null) {
+    const unit = JSON.parse(localStorage.getItem('unit') || 'null')
+    const normalized = normalizeUser(personOrId, unit)
+    setCurrentUser(normalized)
+    localStorage.setItem('user', JSON.stringify(personOrId))
+
+    // ── Refresh employees from the new user's list ──
+    try {
+      const list = JSON.parse(localStorage.getItem('list') || 'null')
+      if (list && list.length > 0) setEmployees(mapList(list))
+      else setEmployees(SEED_EMPLOYEES)
+    } catch { setEmployees(SEED_EMPLOYEES) }
+
+    return true
+  }
 
     // ── Demo path: called with (id string, password string)
     const DEMO_USERS = {
@@ -600,6 +612,7 @@ export function AppProvider({ children }) {
     localStorage.removeItem("user");
     localStorage.removeItem("unit");
     localStorage.removeItem("token");
+    localStorage.removeItem('list');
   }, []);
 
   /* ── Toast ── */
