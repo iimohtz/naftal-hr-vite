@@ -124,7 +124,9 @@ export default function EmployeesPage() {
       .sort((a, b) =>
         sortBy === 'name' ? a.name.localeCompare(b.name) :
         sortBy === 'dept' ? a.dept.localeCompare(b.dept) :
-        a.id.localeCompare(b.id)
+        !isNaN(a.id) && !isNaN(b.id)
+        ? Number(a.id) - Number(b.id)
+        : a.id.localeCompare(b.id)
       )
   }, [employees, deptFilter, search, sortBy])
 

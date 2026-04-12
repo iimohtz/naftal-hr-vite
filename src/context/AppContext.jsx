@@ -506,7 +506,30 @@ export function AppProvider({ children }) {
     }
   });
 
-  const [employees,     setEmployees]     = useState(SEED_EMPLOYEES)
+  const [employees, setEmployees] = useState(() => {
+  try {
+    const list = JSON.parse(localStorage.getItem('list') || 'null')
+      if (list && list.length > 0) {
+        return list.map(p => ({
+          id:       String(p.id),
+          name:     `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim(),
+          dept:     p.position || 'N/A',
+          role:     p.position      || 'N/A',
+          email:    p.email         || '',
+          phone:    p.phone_ip      || '',
+          status:   p.is_active     ? 'ACTIVE' : 'INACTIVE',
+          joinDate: p.contract_start_date?.slice(0, 10) || '',
+          location: p.unit_name     || '—',
+          shift:    '—',
+          overtime: 0,
+          present:  0,
+          total:    22,
+          efficiency: 0,
+        }))
+      }
+      return SEED_EMPLOYEES
+    } catch { return SEED_EMPLOYEES }
+   })
   const [gatePasses, setGatePasses] = useState(SEED_GATE_PASSES);
   const [requests, setRequests] = useState(SEED_REQUESTS);
   const [notifications, setNotifications] = useState(SEED_NOTIFICATIONS);
