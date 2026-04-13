@@ -245,12 +245,28 @@ export default function EmployeesPage() {
   const [page, setPage] = useState(1);
   const [addOpen, setAddOpen] = useState(false);
   const [editEmp, setEditEmp] = useState(null);
-  const [profileEmp, setProfileEmp] = useState(null); // drawer target
+  const [profileEmp, setProfileEmp] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [unitTypeFilter, setUnitTypeFilter] = useState("ALL");
+
+  const DEPTS = useMemo(() => {
+    const unique = [...new Set(employees.map((e) => e.dept).filter(Boolean))];
+    return ["ALL", ...unique.sort()];
+  }, [employees]);
+
+  const UNIT_TYPES = useMemo(() => {
+    const unique = [
+      ...new Set(employees.map((e) => e.unit_type).filter(Boolean)),
+    ];
+    return ["ALL", ...unique.sort()];
+  }, [employees]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     return employees
       .filter((e) => deptFilter === "ALL" || e.dept === deptFilter)
+      .filter((e) => statusFilter === "ALL" || e.status === statusFilter)
+      .filter((e) => unitTypeFilter === "ALL" || e.unit_type === unitTypeFilter)
       .filter(
         (e) =>
           !q ||
@@ -268,7 +284,7 @@ export default function EmployeesPage() {
               ? Number(a.id) - Number(b.id)
               : a.id.localeCompare(b.id),
       );
-  }, [employees, deptFilter, search, sortBy]);
+  }, [employees, deptFilter, statusFilter, unitTypeFilter, search, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const shown = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
@@ -364,6 +380,22 @@ export default function EmployeesPage() {
                 {d === "ALL" ? "ALL DEPTS" : d}
               </button>
             ))}
+            <span className={styles.filterDivider}>|</span>
+
+            {/* Unit type filter */}
+            <span className={styles.filterLabel}>TYPE:</span>
+            {UNIT_TYPES.map((t) => (
+              <button
+                key={t}
+                className={`${styles.filterBtn} ${unitTypeFilter === t ? styles.filterBtnActive : ""}`}
+                onClick={() => {
+                  setUnitTypeFilter(t);
+                  setPage(1);
+                }}
+              >
+                {t === "ALL" ? "ALL" : t.toUpperCase()}
+              </button>
+            ))}
           </div>
           <div className={styles.toolbarRight}>
             <div className={styles.searchBox}>
@@ -406,11 +438,30 @@ export default function EmployeesPage() {
                 </button>
               )}
             </div>
+
             <Select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
               <option value="id">SORT: ID</option>
               <option value="name">SORT: NAME</option>
               <option value="dept">SORT: DEPT</option>
             </Select>
+            {(deptFilter !== "ALL" ||
+              statusFilter !== "ALL" ||
+              unitTypeFilter !== "ALL" ||
+              search) && (
+              <button
+                className={styles.filterBtn}
+                onClick={() => {
+                  setDeptFilter("ALL");
+                  setStatusFilter("ALL");
+                  setUnitTypeFilter("ALL");
+                  setSearch("");
+                  setPage(1);
+                }}
+                style={{ color: "var(--red)", borderColor: "var(--red)" }}
+              >
+                RESET
+              </button>
+            )}
           </div>
         </div>
 
@@ -579,7 +630,7 @@ export default function EmployeesPage() {
                         <button
                           className={`${styles.actionBtn} ${styles.actionBtnPrint}`}
                           title="Print payroll slip"
-                          onClick={() => handlePrintSlip(emp)} 
+                          onClick={() => handlePrintSlip(emp)}
                         >
                           <svg
                             width="15"

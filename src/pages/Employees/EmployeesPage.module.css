@@ -117,3 +117,8 @@
   white-space: nowrap;
 }
 .empNameBtn:hover { color: var(--orange); }
+.filterDivider {
+  color: var(--border);
+  margin: 0 4px;
+  user-select: none;
+}
