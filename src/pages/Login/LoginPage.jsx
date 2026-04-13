@@ -51,7 +51,7 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user",  JSON.stringify(data.person));
       localStorage.setItem("unit",  JSON.stringify(data.unit ?? null));
-      localStorage.setItem("list",  JSON.stringify(data.list ?? []));
+      localStorage.setItem("list",  JSON.stringify(data.persons_list ?? []));
 
       // login() in AppContext reads 'unit' from localStorage, normalizes,
       // sets currentUser with full_name, admin flag, unit_name, etc.
