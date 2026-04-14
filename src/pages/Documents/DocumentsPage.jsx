@@ -577,9 +577,21 @@ function QuickActionPanel() {
   const [timeFrom, setTimeFrom] = useState("");
   const [timeTo, setTimeTo] = useState("");
   const [destination, setDestination] = useState("");
-  const [reasonType, setReasonType] = useState("personal");
+  const [reasonType, setReasonType] = useState("");
   const [note, setNote] = useState("");
   const [sending, setSending] = useState(false);
+
+  const REASON_OPTIONS = {
+    "Annual Leave": ["Paid Leave", "Exceptional Leave", "Compensatory Leave", "Unpaid Leave"],
+    "Medical Leave": [],
+    "Gate Pass": ["Personal", "Work"],
+    "Activité Relax": ["Mission", "Training"],
+  };
+
+  const handleTypeChange = (e) => {
+    setType(e.target.value);
+    setReasonType("");
+  };
 
   const handleSend = async () => {
     if (!type) {
@@ -599,7 +611,7 @@ function QuickActionPanel() {
 
     const payload = {
       type: type,
-      reason_type: reasonType,
+      reason_type: REASON_OPTIONS[type]?.length > 0 ? reasonType || null : null,
       date_from: dateFrom || null,
       date_to: dateTo || null,
       time_from: timeFrom || null,
@@ -683,7 +695,7 @@ function QuickActionPanel() {
     setTimeFrom("");
     setTimeTo("");
     setDestination("");
-    setReasonType("personal");
+    setReasonType("");
     setNote("");
     setSending(false);
   };
@@ -697,7 +709,7 @@ function QuickActionPanel() {
 
       <div className={styles.quickBody}>
         <FormField label="Request Type">
-          <Select value={type} onChange={(e) => setType(e.target.value)}>
+          <Select value={type} onChange={handleTypeChange}>
             <option value="">SELECT REQUEST TYPE…</option>
             <option>Annual Leave</option>
             <option>Medical Leave</option>
@@ -759,30 +771,27 @@ function QuickActionPanel() {
             placeholder="e.g. Head Office, Site B…"
           />
         </FormField>
-        <FormField label="Reason Category">
-          <div className={styles.radioRow}>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="reasonType"
-                value="personal"
-                checked={reasonType === "personal"}
-                onChange={() => setReasonType("personal")}
-              />
-              <span>Personal</span>
-            </label>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="reasonType"
-                value="work"
-                checked={reasonType === "work"}
-                onChange={() => setReasonType("work")}
-              />
-              <span>Work</span>
-            </label>
-          </div>
-        </FormField>
+
+        {/* Reason Category — only shown when the selected type has options */}
+        {type && REASON_OPTIONS[type]?.length > 0 && (
+          <FormField label="Reason Category">
+            <div className={styles.radioRow}>
+              {REASON_OPTIONS[type].map((opt) => (
+                <label key={opt} className={styles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="reasonType"
+                    value={opt.toLowerCase()}
+                    checked={reasonType === opt.toLowerCase()}
+                    onChange={() => setReasonType(opt.toLowerCase())}
+                  />
+                  <span>{opt}</span>
+                </label>
+              ))}
+            </div>
+          </FormField>
+        )}
+
         <FormField label="Internal Note / Justification">
           <Textarea
             value={note}
