@@ -57,7 +57,7 @@ export default function LoginPage() {
       // sets currentUser with full_name, admin flag, unit_name, etc.
       login(data.person);
       navigate("/dashboard");
-      console.log(data)
+      console.log(data);
     } catch (err) {
       setError(
         err.message || "Invalid Employee ID or password. Please verify your credentials."
