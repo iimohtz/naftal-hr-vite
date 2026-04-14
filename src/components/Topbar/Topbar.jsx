@@ -4,11 +4,13 @@ import styles from './Topbar.module.css'
 
 const BellIcon   = () => <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5a6 6 0 016 6v3.75l1.5 1.5v.75H1.5v-.75L3 11.25V7.5a6 6 0 016-6zM7.5 15a1.5 1.5 0 003 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
 const SearchIcon = () => <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.5"/><path d="M10 10l2.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+const MoonIcon   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+const SunIcon    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
 
 const CAT_COLORS = { SYSTEM: 'var(--blue)', SECURITY: 'var(--red)', HR: 'var(--orange)' }
 
 export default function Topbar() {
-  const { currentUser, notifications, markNotificationRead, markAllNotificationsRead } = useApp()
+  const { currentUser, notifications, markNotificationRead, markAllNotificationsRead, theme, toggleTheme } = useApp()
   const [showNotif, setShowNotif] = useState(false)
   const [search,    setSearch]    = useState('')
   const ref = useRef(null)
@@ -39,6 +41,15 @@ export default function Topbar() {
       </div>
 
       <div className={styles.right}>
+        <button
+          className={styles.iconBtn}
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+          style={{ marginRight: '8px' }}
+        >
+          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+        </button>
+
         <div className={styles.notifWrap} ref={ref}>
           <button
             className={`${styles.iconBtn} ${showNotif ? styles.iconBtnActive : ''}`}

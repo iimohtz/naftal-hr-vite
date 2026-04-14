@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 
 /* ─────────────────────────────────────────────────────────────
    ADMIN ACCESS LIST
@@ -129,6 +129,17 @@ export function AppProvider({ children }) {
   const [notifications, setNotifications] = useState(SEED_NOTIFICATIONS)
   const [toasts,        setToasts]        = useState([])
 
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light')
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light')
+  }, [])
+
   /* ── Auth ── */
   const login = useCallback((personOrId, password) => {
     // ── Real API path: called with the person object from data.person
@@ -211,6 +222,7 @@ export function AppProvider({ children }) {
     requests, addRequest, updateRequestStatus,
     notifications, markNotificationRead, markAllNotificationsRead,
     toasts, addToast,
+    theme, toggleTheme,
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

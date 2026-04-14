@@ -76,6 +76,28 @@
   --font-body: 'Barlow', sans-serif;
 }
 
+[data-theme='dark'] {
+  --bg: #0A1128;
+  --bg-subtle: #142145;
+  --card: #0F1938;
+  --card-hover: #172652;
+
+  --text: #F2F4FA;
+  --text-mid: #D2DAE8;
+  --text-muted: #8090BB;
+  --text-light: #5468A0;
+
+  --border: #1D2E60;
+  --border-mid: #2A3F7A;
+
+  --blue-bg: #11204A;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
 /* ─── Reset ─────────────────────────────────────────────────── */
 *,
 *::before,
@@ -98,6 +120,7 @@ body {
   color: var(--text);
   line-height: 1.5;
   min-height: 100vh;
+  transition: background-color var(--t-fast), color var(--t-fast);
 }
 
 #root {
