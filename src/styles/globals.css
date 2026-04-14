@@ -1,73 +1,85 @@
 /* ============================================================
    NAFTAL HR-SYNC — Global Styles
-   Operational Unit V4.1
+   Official Naftal Brand Palette (from logo references):
+     Naftal Blue    #1B3A8C  → sidebar / dark surfaces / logo
+     Naftal Yellow  #FEDD00  → primary accent / buttons / logo bg
+     Dark Blue      #142E6E  → deeper sidebar / hover states
    ============================================================ */
 
 :root {
-  /* Brand */
-  --orange:        #E8510A;
-  --orange-dark:   #C04008;
-  --orange-light:  #FF6B2B;
-  --orange-ghost:  rgba(232, 81, 10, 0.08);
-  --orange-ghost2: rgba(232, 81, 10, 0.15);
+  /* ── Brand primary: Naftal Yellow ── */
+  --orange: #FEDD00;
+  --orange-dark: #E5C800;
+  --orange-light: #FEE540;
+  --orange-ghost: rgba(254, 221, 0, 0.12);
+  --orange-ghost2: rgba(254, 221, 0, 0.24);
 
-  /* Surface */
-  --navy:          #111827;
-  --navy-mid:      #1E2736;
-  --bg:            #F0F2F5;
-  --bg-subtle:     #E8EBF0;
-  --card:          #FFFFFF;
-  --card-hover:    #FAFBFC;
+  /* ── Soft Yellow (highlight / secondary bg) ── */
+  --yellow-soft: #FFF8CC;
+  --yellow-soft-bg: rgba(254, 221, 0, 0.10);
+  --yellow-soft-border: rgba(254, 221, 0, 0.35);
 
-  /* Text */
-  --text:          #111827;
-  --text-mid:      #374151;
-  --text-muted:    #6B7280;
-  --text-light:    #9CA3AF;
+  /* ── Sidebar: Naftal Blue (from logo) ── */
+  --navy: #1B3A8C;
+  --navy-mid: #2448A0;
 
-  /* Border */
-  --border:        #E5E7EB;
-  --border-mid:    #D1D5DB;
+  /* ── Page surfaces (soft blue-white tint) ── */
+  --bg: #F2F4FA;
+  --bg-subtle: #E4E8F4;
+  --card: #FFFFFF;
+  --card-hover: #F8F9FF;
 
-  /* Status */
-  --green:         #15803D;
-  --green-bg:      #F0FDF4;
-  --green-border:  #86EFAC;
-  --amber:         #B45309;
-  --amber-bg:      #FFFBEB;
-  --amber-border:  #FCD34D;
-  --red:           #B91C1C;
-  --red-bg:        #FEF2F2;
-  --red-border:    #FECACA;
-  --blue:          #1D4ED8;
-  --blue-bg:       #EFF6FF;
+  /* ── Text (dark Naftal blue) ── */
+  --text: #142E6E;
+  --text-mid: #1B3A8C;
+  --text-muted: #4A6099;
+  --text-light: #8090BB;
 
-  /* Layout */
-  --sidebar-w:     248px;
-  --topbar-h:      60px;
-  --radius-sm:     3px;
-  --radius:        4px;
-  --radius-md:     6px;
-  --radius-lg:     10px;
+  /* ── Border (blue-grey) ── */
+  --border: #D2DAE8;
+  --border-mid: #B8C4DA;
 
-  /* Shadow */
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow:     0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
-  --shadow-md:  0 8px 24px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.04);
-  --shadow-lg:  0 20px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.06);
+  /* ── Status colours ── */
+  --green: #15803D;
+  --green-bg: #F0FDF4;
+  --green-border: #86EFAC;
+  --amber: #B45309;
+  --amber-bg: #FFFBEB;
+  --amber-border: #FCD34D;
+  --red: #B91C1C;
+  --red-bg: #FEF2F2;
+  --red-border: #FECACA;
+  --blue: #1B3A8C;
+  --blue-bg: #EDF0FA;
 
-  /* Transitions */
+  /* ── Layout ── */
+  --sidebar-w: 252px;
+  --topbar-h: 62px;
+  --radius-sm: 3px;
+  --radius: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  /* ── Shadow (blue-tinted) ── */
+  --shadow-sm: 0 1px 3px rgba(27, 58, 140, 0.08);
+  --shadow: 0 4px 12px rgba(27, 58, 140, 0.08), 0 2px 4px rgba(27, 58, 140, 0.04);
+  --shadow-md: 0 8px 24px rgba(27, 58, 140, 0.10), 0 4px 8px rgba(27, 58, 140, 0.05);
+  --shadow-lg: 0 20px 48px rgba(27, 58, 140, 0.14), 0 8px 16px rgba(27, 58, 140, 0.07);
+
+  /* ── Transitions ── */
   --t-fast: 120ms ease;
-  --t:      200ms ease;
+  --t: 200ms ease;
   --t-slow: 340ms ease;
 
-  /* Typography */
+  /* ── Typography ── */
   --font-display: 'Barlow Condensed', sans-serif;
-  --font-body:    'Barlow', sans-serif;
+  --font-body: 'Barlow', sans-serif;
 }
 
 /* ─── Reset ─────────────────────────────────────────────────── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -94,15 +106,18 @@ body {
   flex-direction: column;
 }
 
-/* ─── Typography ─────────────────────────────────────────────── */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 800;
   letter-spacing: 0.03em;
   color: var(--text);
 }
 
-/* ─── Interactive resets ─────────────────────────────────────── */
 button {
   cursor: pointer;
   border: none;
@@ -112,55 +127,140 @@ button {
   color: inherit;
   line-height: 1;
 }
-button:disabled { cursor: not-allowed; opacity: 0.6; }
 
-input, select, textarea {
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+input,
+select,
+textarea {
   font-family: var(--font-body);
   font-size: inherit;
   color: var(--text);
   outline: none;
 }
-input::placeholder, textarea::placeholder { color: var(--text-light); }
 
-a { text-decoration: none; color: inherit; }
-table { border-collapse: collapse; width: 100%; }
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-light);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
 
 /* ─── Scrollbar ──────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: var(--bg-subtle); }
-::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-light); }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-subtle);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-mid);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--orange-dark);
+}
 
 /* ─── Animations ─────────────────────────────────────────────── */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
+
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(16px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
+
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.45; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
 }
+
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
+
 @keyframes toastIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.96); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.animate-fade-in    { animation: fadeIn   0.25s ease both; }
-.animate-scale-in   { animation: scaleIn  0.20s ease both; }
-.animate-slide-right{ animation: slideInRight 0.22s ease both; }
+@keyframes barGrow {
+  from {
+    width: 0;
+  }
+}
 
-/* ─── Focus ring ─────────────────────────────────────────────── */
+.animate-fade-in {
+  animation: fadeIn 0.25s ease both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.20s ease both;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.22s ease both;
+}
+
 :focus-visible {
   outline: 2px solid var(--orange);
   outline-offset: 2px;
