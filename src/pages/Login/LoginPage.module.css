@@ -49,7 +49,7 @@
 .card {
   position: relative;
   z-index: 10;
-  background: #FFFFFF;
+  background: var(--card);
   border-radius: 12px;
   padding: 44px 48px 36px;
   width: 100%;
@@ -170,7 +170,7 @@
 }
 .input:focus {
   border-color: #FEDD00;
-  background: #fff;
+  background: var(--card);
   box-shadow: 0 0 0 3px rgba(254,221,0,0.15);
 }
 .input:disabled { opacity: 0.6; cursor: not-allowed; }

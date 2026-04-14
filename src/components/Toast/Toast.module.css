@@ -6,10 +6,10 @@
   font-size: 13px; letter-spacing: 0.05em; box-shadow: var(--shadow-md);
   animation: toastIn 0.28s ease both; min-width: 280px; max-width: 420px; border-left: 3px solid transparent;
 }
-.toast--success { background:#fff; color:var(--green);  border:1px solid var(--green-border);  border-left:3px solid var(--green);  }
-.toast--warning { background:#fff; color:var(--amber);  border:1px solid var(--amber-border);  border-left:3px solid var(--amber);  }
-.toast--error   { background:#fff; color:var(--red);    border:1px solid var(--red-border);    border-left:3px solid var(--red);    }
-.toast--info    { background:#fff; color:var(--blue);   border:1px solid #93C5FD;              border-left:3px solid var(--blue);   }
+.toast--success { background:var(--card); color:var(--green);  border:1px solid var(--green-border);  border-left:3px solid var(--green);  }
+.toast--warning { background:var(--card); color:var(--amber);  border:1px solid var(--amber-border);  border-left:3px solid var(--amber);  }
+.toast--error   { background:var(--card); color:var(--red);    border:1px solid var(--red-border);    border-left:3px solid var(--red);    }
+.toast--info    { background:var(--card); color:var(--blue);   border:1px solid #93C5FD;              border-left:3px solid var(--blue);   }
 
 .toastIcon { display: flex; align-items: center; flex-shrink: 0; }
 .toastMessage { flex: 1; line-height: 1.4; }
