@@ -711,10 +711,10 @@ function QuickActionPanel() {
         <FormField label="Request Type">
           <Select value={type} onChange={handleTypeChange}>
             <option value="">SELECT REQUEST TYPE…</option>
-            <option>Annual Leave</option>
-            <option>Medical Leave</option>
-            <option>Gate Pass</option>
-            <option>Activité Relax</option>
+            <option>Vacation</option>
+            <option>Exit Pass</option>
+            <option>Absence Authorization</option>
+            <option>Time Off Activity</option>
           </Select>
         </FormField>
         <FormField label="Duration / Period">
