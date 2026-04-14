@@ -59,21 +59,21 @@ export function normalizeUser(person, unit) {
 
 /* ─── Seed Data ────────────────────────────────────────────── */
 const SEED_EMPLOYEES = [
-  { id:'NF-4829', name:'Amine Benali',    dept:'REFINERY OPS',  role:'SITE MANAGER',      status:'ACTIVE',   email:'amine.benali@naftal.dz',    phone:'+213 550 001 001', location:'Zone B – Refinery',    overtime:12.5, present:22, total:22, efficiency:98,  joinDate:'2019-03-12', shift:'Morning'  },
-  { id:'NF-9102', name:'Sarah Mansouri',  dept:'LOGISTICS',     role:'FLEET ANALYST',     status:'ACTIVE',   email:'sarah.mansouri@naftal.dz',  phone:'+213 550 001 002', location:'HQ, Algiers',          overtime:8,    present:20, total:22, efficiency:91,  joinDate:'2020-06-05', shift:'Morning'  },
-  { id:'NF-1273', name:'Karim Hamidi',    dept:'MAINTENANCE',   role:'SAFETY OFFICER',    status:'ON LEAVE', email:'karim.hamidi@naftal.dz',    phone:'+213 550 001 003', location:'Station HMD-04',       overtime:0,    present:18, total:22, efficiency:82,  joinDate:'2018-01-20', shift:'Evening'  },
-  { id:'NF-3304', name:'Leila Brahimi',   dept:'HSE UNIT',      role:'HSE SPECIALIST',    status:'ACTIVE',   email:'leila.brahimi@naftal.dz',   phone:'+213 550 001 004', location:'HQ, Algiers',          overtime:6,    present:22, total:22, efficiency:100, joinDate:'2021-09-01', shift:'Morning'  },
-  { id:'NF-5512', name:'Omar Touati',     dept:'INDUSTRIAL IT', role:'LEAD ARCHITECT',    status:'ACTIVE',   email:'omar.touati@naftal.dz',     phone:'+213 550 001 005', location:'HQ, Algiers',          overtime:14,   present:21, total:22, efficiency:95,  joinDate:'2017-02-15', shift:'Morning'  },
-  { id:'NF-8842', name:'Ahmed Mansour',   dept:'OPERATIONS',    role:'FIELD ENGINEER',    status:'ACTIVE',   email:'ahmed.mansour@naftal.dz',   phone:'+213 550 001 006', location:'Site A – Maintenance', overtime:10,   present:20, total:22, efficiency:91,  joinDate:'2020-11-08', shift:'Night'    },
-  { id:'NF-1290', name:'Fatima Zohra',    dept:'OPERATIONS',    role:'ANALYST',           status:'ACTIVE',   email:'fatima.zohra@naftal.dz',    phone:'+213 550 001 007', location:'HQ, Algiers',          overtime:4,    present:22, total:22, efficiency:100, joinDate:'2022-04-22', shift:'Morning'  },
-  { id:'NF-4412', name:'Omar Belkacem',   dept:'LOGISTICS',     role:'COORDINATOR',       status:'ACTIVE',   email:'omar.belkacem@naftal.dz',   phone:'+213 550 001 008', location:'Zone B – Refinery',    overtime:9,    present:21, total:22, efficiency:95,  joinDate:'2019-08-17', shift:'Evening'  },
-  { id:'NF-0091', name:'Karim Haddad',    dept:'MAINTENANCE',   role:'TECHNICIAN',        status:'ACTIVE',   email:'karim.haddad@naftal.dz',    phone:'+213 550 001 009', location:'Station HMD-04',       overtime:7,    present:22, total:22, efficiency:100, joinDate:'2021-03-03', shift:'Morning'  },
-  { id:'NF-3321', name:'Nadia Brahimi',   dept:'HSE UNIT',      role:'SAFETY OFFICER',    status:'ON LEAVE', email:'nadia.brahimi@naftal.dz',   phone:'+213 550 001 010', location:'HQ, Algiers',          overtime:0,    present:15, total:22, efficiency:68,  joinDate:'2020-07-11', shift:'Morning'  },
-  { id:'NF-7731', name:'Yassine Larbi',   dept:'OPERATIONS',    role:'SUPERVISOR',        status:'ACTIVE',   email:'yassine.larbi@naftal.dz',   phone:'+213 550 001 011', location:'Zone B – Refinery',    overtime:11,   present:22, total:22, efficiency:100, joinDate:'2016-01-29', shift:'Morning'  },
-  { id:'NF-2210', name:'Lila Amrani',     dept:'MEDICAL UNIT',  role:'NURSE',             status:'ACTIVE',   email:'lila.amrani@naftal.dz',     phone:'+213 550 001 012', location:'HQ, Algiers',          overtime:3,    present:20, total:22, efficiency:91,  joinDate:'2022-10-14', shift:'Evening'  },
-  { id:'NF-6601', name:'Mehdi Kaci',      dept:'REFINERY OPS',  role:'PROCESS ENGINEER',  status:'ACTIVE',   email:'mehdi.kaci@naftal.dz',      phone:'+213 550 001 013', location:'Zone B – Refinery',    overtime:16,   present:22, total:22, efficiency:100, joinDate:'2015-05-07', shift:'Morning'  },
-  { id:'NF-3390', name:'Samira Ouali',    dept:'INDUSTRIAL IT', role:'SYSTEMS ANALYST',   status:'ACTIVE',   email:'samira.ouali@naftal.dz',    phone:'+213 550 001 014', location:'HQ, Algiers',          overtime:5,    present:21, total:22, efficiency:95,  joinDate:'2021-12-19', shift:'Morning'  },
-  { id:'NF-8810', name:'Rachid Bouzid',   dept:'LOGISTICS',     role:'LOGISTICS MANAGER', status:'INACTIVE', email:'rachid.bouzid@naftal.dz',   phone:'+213 550 001 015', location:'Warehouse A',          overtime:0,    present:0,  total:22, efficiency:0,   joinDate:'2018-02-02', shift:'Morning'  },
+  { id:'1', name:'Amine Benali',    dept:'REFINERY OPS',  role:'SITE MANAGER',      status:'ACTIVE',   email:'amine.benali@naftal.dz',    phone:'+213 550 001 001', location:'Zone B – Refinery',    overtime:12.5, present:22, total:22, efficiency:98,  joinDate:'2019-03-12', shift:'Morning'  },
+  { id:'2', name:'Sarah Mansouri',  dept:'LOGISTICS',     role:'FLEET ANALYST',     status:'ACTIVE',   email:'sarah.mansouri@naftal.dz',  phone:'+213 550 001 002', location:'HQ, Algiers',          overtime:8,    present:20, total:22, efficiency:91,  joinDate:'2020-06-05', shift:'Morning'  },
+  { id:'3', name:'Karim Hamidi',    dept:'MAINTENANCE',   role:'SAFETY OFFICER',    status:'ON LEAVE', email:'karim.hamidi@naftal.dz',    phone:'+213 550 001 003', location:'Station HMD-04',       overtime:0,    present:18, total:22, efficiency:82,  joinDate:'2018-01-20', shift:'Evening'  },
+  { id:'4', name:'Leila Brahimi',   dept:'HSE UNIT',      role:'HSE SPECIALIST',    status:'ACTIVE',   email:'leila.brahimi@naftal.dz',   phone:'+213 550 001 004', location:'HQ, Algiers',          overtime:6,    present:22, total:22, efficiency:100, joinDate:'2021-09-01', shift:'Morning'  },
+  { id:'5', name:'Omar Touati',     dept:'INDUSTRIAL IT', role:'LEAD ARCHITECT',    status:'ACTIVE',   email:'omar.touati@naftal.dz',     phone:'+213 550 001 005', location:'HQ, Algiers',          overtime:14,   present:21, total:22, efficiency:95,  joinDate:'2017-02-15', shift:'Morning'  },
+  { id:'6', name:'Ahmed Mansour',   dept:'OPERATIONS',    role:'FIELD ENGINEER',    status:'ACTIVE',   email:'ahmed.mansour@naftal.dz',   phone:'+213 550 001 006', location:'Site A – Maintenance', overtime:10,   present:20, total:22, efficiency:91,  joinDate:'2020-11-08', shift:'Night'    },
+  { id:'7', name:'Fatima Zohra',    dept:'OPERATIONS',    role:'ANALYST',           status:'ACTIVE',   email:'fatima.zohra@naftal.dz',    phone:'+213 550 001 007', location:'HQ, Algiers',          overtime:4,    present:22, total:22, efficiency:100, joinDate:'2022-04-22', shift:'Morning'  },
+  { id:'8', name:'Omar Belkacem',   dept:'LOGISTICS',     role:'COORDINATOR',       status:'ACTIVE',   email:'omar.belkacem@naftal.dz',   phone:'+213 550 001 008', location:'Zone B – Refinery',    overtime:9,    present:21, total:22, efficiency:95,  joinDate:'2019-08-17', shift:'Evening'  },
+  { id:'9', name:'Karim Haddad',    dept:'MAINTENANCE',   role:'TECHNICIAN',        status:'ACTIVE',   email:'karim.haddad@naftal.dz',    phone:'+213 550 001 009', location:'Station HMD-04',       overtime:7,    present:22, total:22, efficiency:100, joinDate:'2021-03-03', shift:'Morning'  },
+  { id:'10', name:'Nadia Brahimi',   dept:'HSE UNIT',      role:'SAFETY OFFICER',    status:'ON LEAVE', email:'nadia.brahimi@naftal.dz',   phone:'+213 550 001 010', location:'HQ, Algiers',          overtime:0,    present:15, total:22, efficiency:68,  joinDate:'2020-07-11', shift:'Morning'  },
+  { id:'11', name:'Yassine Larbi',   dept:'OPERATIONS',    role:'SUPERVISOR',        status:'ACTIVE',   email:'yassine.larbi@naftal.dz',   phone:'+213 550 001 011', location:'Zone B – Refinery',    overtime:11,   present:22, total:22, efficiency:100, joinDate:'2016-01-29', shift:'Morning'  },
+  { id:'12', name:'Lila Amrani',     dept:'MEDICAL UNIT',  role:'NURSE',             status:'ACTIVE',   email:'lila.amrani@naftal.dz',     phone:'+213 550 001 012', location:'HQ, Algiers',          overtime:3,    present:20, total:22, efficiency:91,  joinDate:'2022-10-14', shift:'Evening'  },
+  { id:'13', name:'Mehdi Kaci',      dept:'REFINERY OPS',  role:'PROCESS ENGINEER',  status:'ACTIVE',   email:'mehdi.kaci@naftal.dz',      phone:'+213 550 001 013', location:'Zone B – Refinery',    overtime:16,   present:22, total:22, efficiency:100, joinDate:'2015-05-07', shift:'Morning'  },
+  { id:'14', name:'Samira Ouali',    dept:'INDUSTRIAL IT', role:'SYSTEMS ANALYST',   status:'ACTIVE',   email:'samira.ouali@naftal.dz',    phone:'+213 550 001 014', location:'HQ, Algiers',          overtime:5,    present:21, total:22, efficiency:95,  joinDate:'2021-12-19', shift:'Morning'  },
+  { id:'15', name:'Rachid Bouzid',   dept:'LOGISTICS',     role:'LOGISTICS MANAGER', status:'INACTIVE', email:'rachid.bouzid@naftal.dz',   phone:'+213 550 001 015', location:'Warehouse A',          overtime:0,    present:0,  total:22, efficiency:0,   joinDate:'2018-02-02', shift:'Morning'  },
 ]
 
 const SEED_GATE_PASSES = [
@@ -162,10 +162,10 @@ export function AppProvider({ children }) {
         },
         unit: { unit_name: 'Direction RH', unit_type: 'direction', director_id: 'NFT-2024-00892' },
       },
-      'NF-4829': {
+      '1': {
         password: 'shift123',
         person: {
-          id: 'NF-4829', first_name: 'Amine', last_name: 'K.',
+          id: '1', first_name: 'Amine', last_name: 'K.',
           position: 'Shift Manager', email: 'amine.k@naftal.dz',
           phone_ip: '+213 550 001 001', unit_id: 2,
         },
