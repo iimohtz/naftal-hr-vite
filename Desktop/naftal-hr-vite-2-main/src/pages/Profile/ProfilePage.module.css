@@ -1,0 +1,77 @@
+.page { display: flex; flex-direction: column; gap: 24px; animation: fadeIn 0.22s ease both; }
+.pageHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.pageTitle  { font-family: var(--font-display); font-weight: 800; font-size: 30px; letter-spacing: 0.04em; }
+.pageSub    { font-size: 11px; color: var(--text-light); letter-spacing: 0.1em; margin-top: 4px; text-transform: uppercase; }
+
+.grid     { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+.leftCol  { display: flex; flex-direction: column; gap: 16px; }
+.rightCol { display: flex; flex-direction: column; gap: 16px; }
+
+/* Identity Card */
+.identityCard { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px 24px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; }
+.avatarWrap   { position: relative; margin-bottom: 12px; }
+.avatarBadge  { position: absolute; bottom: -4px; right: -4px; width: 26px; height: 26px; background: var(--orange); border-radius: 50%; border: 2px solid var(--card); display: flex; align-items: center; justify-content: center; color: #fff; }
+.idName       { font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: 0.04em; line-height: 1.1; margin-top: 4px; }
+.idRole       { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.1em; color: var(--orange); margin-bottom: 16px; }
+.idMeta       { width: 100%; display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid var(--border); text-align: left; }
+.idMetaRow    { display: flex; align-items: center; gap: 10px; }
+.idMetaIcon   { color: var(--text-light); display: flex; flex-shrink: 0; }
+.idMetaVal    { font-size: 12px; color: var(--text-mid); font-weight: 500; }
+
+/* Attendance Card */
+.attCard      { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px 20px; }
+.attHeader    { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.attTitle     { font-family: var(--font-display); font-weight: 700; font-size: 10.5px; letter-spacing: 0.1em; color: var(--text-light); }
+.attBadge     { background: var(--orange); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 9px; letter-spacing: 0.1em; padding: 3px 8px; border-radius: var(--radius-sm); }
+.attStats     { display: flex; gap: 24px; margin-bottom: 14px; }
+.attStat      { display: flex; flex-direction: column; gap: 3px; }
+.attStatLabel { font-family: var(--font-display); font-weight: 700; font-size: 9px; letter-spacing: 0.1em; color: var(--text-light); text-transform: uppercase; }
+.attStatVal   { font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1; }
+.effRow       { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.effVal       { font-family: var(--font-display); font-weight: 700; font-size: 12px; color: var(--text-muted); }
+.effTrack     { height: 7px; background: var(--bg-subtle); border-radius: 10px; overflow: hidden; }
+.effFill      { height: 100%; background: linear-gradient(90deg, var(--orange-dark), var(--orange)); border-radius: 10px; transition: width 0.7s ease; }
+
+/* Session Card */
+.sessionCard        { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px 20px; }
+.sessionHeader      { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.sessionTitle       { font-family: var(--font-display); font-weight: 700; font-size: 10.5px; letter-spacing: 0.1em; color: var(--text-light); }
+.sessionStatus      { display: flex; align-items: center; gap: 6px; }
+.sessionDot         { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+.sessionStatusText  { font-family: var(--font-display); font-weight: 700; font-size: 10px; letter-spacing: 0.1em; color: var(--green); }
+.sessionGrid        { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.sessionItem        { display: flex; flex-direction: column; gap: 3px; }
+.sessionLabel       { font-family: var(--font-display); font-weight: 700; font-size: 9px; letter-spacing: 0.1em; color: var(--text-light); text-transform: uppercase; }
+.sessionVal         { font-size: 12.5px; font-weight: 500; }
+
+/* Weekly Card */
+.weekCard    { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+.weekHeader  { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap; }
+.weekTitle   { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.09em; }
+.weekRange   { font-family: var(--font-display); font-weight: 600; font-size: 10px; letter-spacing: 0.08em; color: var(--text-light); }
+.weekRow     { display: flex; align-items: center; gap: 20px; padding: 14px 20px; border-bottom: 1px solid var(--border); transition: background var(--t-fast); }
+.weekRow:last-child { border-bottom: none; }
+.weekRow:hover { background: var(--bg); }
+.weekDay     { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.1em; color: var(--text-light); width: 36px; flex-shrink: 0; }
+.weekTimes   { display: flex; align-items: center; gap: 12px; flex: 1; }
+.weekTime    { display: flex; flex-direction: column; gap: 1px; }
+.weekTimeLabel { font-family: var(--font-display); font-weight: 700; font-size: 9px; letter-spacing: 0.1em; color: var(--text-light); text-transform: uppercase; }
+.weekTimeVal   { font-family: var(--font-display); font-weight: 800; font-size: 20px; line-height: 1; }
+.weekTimeDivider { font-size: 16px; color: var(--border-mid); margin-top: 12px; }
+
+/* Activity Log */
+.logCard    { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+.logHeader  { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.logTitle   { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.09em; }
+.fullLogBtn { font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: 0.07em; color: var(--orange); transition: opacity var(--t-fast); }
+.fullLogBtn:hover { opacity: 0.75; }
+.logItem    { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--border); transition: background var(--t-fast); }
+.logItem:last-child { border-bottom: none; }
+.logItem:hover { background: var(--bg); }
+.logIconWrap { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; flex-shrink: 0; }
+.logContent  { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.logText     { font-family: var(--font-display); font-weight: 700; font-size: 12.5px; letter-spacing: 0.04em; }
+.logMeta     { font-size: 11px; color: var(--text-light); }
+.logTag      { font-family: var(--font-display); font-weight: 700; font-size: 9.5px; letter-spacing: 0.1em; flex-shrink: 0; }
+
+@media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
